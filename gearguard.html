@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GearGuard | Pro Maintenance Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .kanban-column { min-height: 70vh; background: #f8fafc; border-radius: 12px; }
+        .card { cursor: grab; transition: transform 0.2s; }
+        .card:active { cursor: grabbing; transform: scale(1.02); }
+        .status-overdue { border-left: 4px solid #ef4444; }
+        .glass-morph { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-900">
+
+    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="text-blue-400"></i>
+            <span class="text-xl font-bold tracking-tight">GearGuard <span class="text-blue-400 text-sm font-light">v1.0</span></span>
+        </div>
+        <div class="flex gap-6 text-sm font-medium">
+            <button class="hover:text-blue-400 border-b-2 border-blue-400 pb-1">Dashboard</button>
+            <button class="hover:text-blue-400 pb-1">Equipment</button>
+            <button class="hover:text-blue-400 pb-1">Teams</button>
+            <button class="hover:text-blue-400 pb-1">Reports</button>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-slate-800 rounded-full px-4 py-1 text-xs">Technician: Alex Reed</div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6">
+        
+        <div class="flex gap-4 mb-8">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-1 flex items-center justify-between">
+                <div>
+                    <p class="text-slate-500 text-xs uppercase font-bold tracking-widest">Active Asset</p>
+                    <h2 class="text-xl font-bold">CNC Machine #04</h2>
+                </div>
+                <button class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+                    <i data-lucide="wrench" size="18"></i>
+                    <span class="font-bold">Maintenance</span>
+                    <span class="bg-blue-600 text-white text-xs rounded-full px-2 py-0.5">3</span>
+                </button>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-1 flex items-center justify-between">
+                <div>
+                    <p class="text-slate-500 text-xs uppercase font-bold tracking-widest">Warranty Status</p>
+                    <h2 class="text-xl font-bold text-green-600">Active</h2>
+                </div>
+                <i data-lucide="verified" class="text-slate-300" size="32"></i>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-end mb-6">
+            <h1 class="text-2xl font-extrabold text-slate-800 italic">Maintenance Pipeline</h1>
+            <div class="flex gap-2">
+                <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold flex items-center gap-2 shadow-blue-200 shadow-lg transition-all">
+                    <i data-lucide="plus-circle" size="18"></i> New Request
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="kanban-column p-4 border-t-4 border-blue-400 shadow-sm" ondrop="drop(event)" ondragover="allowDrop(event)" id="col-new">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-600 uppercase text-xs tracking-widest">New Requests</h3>
+                    <span class="bg-slate-200 text-slate-600 text-xs font-bold px-2 py-1 rounded-full">2</span>
+                </div>
+                
+                <div class="card bg-white p-4 rounded-lg shadow-sm mb-4 status-overdue border border-slate-200" draggable="true" ondragstart="drag(event)" id="card-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Breakdown</span>
+                        <span class="text-red-500 text-[10px] font-bold flex items-center gap-1"><i data-lucide="alert-triangle" size="12"></i> OVERDUE</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1">Hydraulic Leakage</h4>
+                    <p class="text-xs text-slate-500 mb-4">Equipment: CNC Machine #04</p>
+                    <div class="flex justify-between items-center border-t pt-3 mt-3">
+                        <div class="flex -space-x-2">
+                            <div class="w-7 h-7 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-[10px] text-white">JD</div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 italic font-medium">Prod. Dept</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kanban-column p-4 border-t-4 border-orange-400 shadow-sm" ondrop="drop(event)" ondragover="allowDrop(event)" id="col-progress">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-600 uppercase text-xs tracking-widest">In Progress</h3>
+                    <span class="bg-slate-200 text-slate-600 text-xs font-bold px-2 py-1 rounded-full">1</span>
+                </div>
+
+                <div class="card bg-white p-4 rounded-lg shadow-sm mb-4 border border-slate-200" draggable="true" ondragstart="drag(event)" id="card-2">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Preventive</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1">Monthly Laptop Audit</h4>
+                    <p class="text-xs text-slate-500 mb-4">Equipment: Dell XPS - #992</p>
+                    <div class="flex justify-between items-center border-t pt-3 mt-3">
+                        <div class="flex -space-x-2">
+                            <img src="https://i.pravatar.cc/100?u=1" class="w-7 h-7 rounded-full border-2 border-white">
+                        </div>
+                        <span class="text-[10px] text-slate-400 italic font-medium">IT Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kanban-column p-4 border-t-4 border-green-400 shadow-sm" ondrop="drop(event)" ondragover="allowDrop(event)" id="col-done">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-600 uppercase text-xs tracking-widest">Repaired</h3>
+                    <span class="bg-slate-200 text-slate-600 text-xs font-bold px-2 py-1 rounded-full">0</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100]">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-slate-900 p-4 text-white flex justify-between">
+                <h3 class="font-bold">Create Maintenance Request</h3>
+                <button onclick="closeModal()" class="hover:text-red-400"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">SELECT EQUIPMENT</label>
+                    <select onchange="autoFill(this)" class="w-full border rounded-lg p-2 bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- Select Asset --</option>
+                        <option value="cnc" data-team="Mechanics" data-dept="Production">CNC Machine #04</option>
+                        <option value="laptop" data-team="IT Support" data-dept="Administration">Macbook Pro - #102</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">TEAM (Auto)</label>
+                        <input id="team-field" type="text" readonly class="w-full border bg-slate-100 rounded-lg p-2 text-sm italic" placeholder="Fetch from Asset...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">CATEGORY</label>
+                        <select class="w-full border rounded-lg p-2 text-sm bg-white">
+                            <option>Corrective</option>
+                            <option>Preventive</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">DESCRIPTION</label>
+                    <textarea class="w-full border rounded-lg p-2 h-20 text-sm" placeholder="e.g. Unusual noise during rotation..."></textarea>
+                </div>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-100">
+                    Submit Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Kanban Drag & Drop Logic
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var target = ev.target.closest('.kanban-column');
+            if (target) {
+                target.appendChild(document.getElementById(data));
+                
+                // Business Logic: If moved to Repaired, show alert or log duration
+                if(target.id === 'col-done') {
+                    const hours = prompt("Enter hours spent for repair:", "1.5");
+                    console.log(`Job completed in ${hours} hours.`);
+                }
+            }
+        }
+
+        // Modal Controls
+        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+        // Business Logic: Auto-Fill
+        function autoFill(select) {
+            const option = select.options[select.selectedIndex];
+            const teamField = document.getElementById('team-field');
+            if (option.dataset.team) {
+                teamField.value = option.dataset.team;
+                teamField.classList.add('text-blue-600', 'not-italic');
+            } else {
+                teamField.value = "";
+            }
+        }
+    </script>
+</body>
+</html>

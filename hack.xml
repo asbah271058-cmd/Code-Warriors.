@@ -1,0 +1,71 @@
+<odoo>
+    <record id="view_maintenance_kanban" model="ir.ui.view">
+        <field name="name">gearguard.request.kanban</field>
+        <field name="model">gearguard.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage" on_create="quick_create">
+                <field name="stage"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click shadow-sm">
+                            <div class="o_kanban_record_top">
+                                <strong><field name="subject"/></strong>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="equipment_id"/>
+                            </div>
+                            <div class="o_kanban_record_bottom mt-2">
+                                <div class="oe_kanban_bottom_left">
+                                    <t t-if="record.scheduled_date.raw_value &lt; Date.today()">
+                                        <span class="text-danger">OVERDUE</span>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="technician_id" widget="many2one_avatar_user"/> [cite: 59]
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_maintenance_calendar" model="ir.ui.view">
+        <field name="name">gearguard.request.calendar</field>
+        <field name="model">gearguard.request</field>
+        <field name="arch" type="xml">
+            <calendar string="Preventive Maintenance" date_start="scheduled_date" color="team_id">
+                <field name="subject"/>
+                <field name="equipment_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_equipment_form" model="ir.ui.view">
+        <field name="name">gearguard.equipment.form</field>
+        <field name="model">gearguard.equipment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_maintenance" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="serial_no"/>
+                            <field name="is_scrapped" attrs="{'invisible': [('is_scrapped', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="maintenance_team_id"/>
+                            <field name="technician_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
